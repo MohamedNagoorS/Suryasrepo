@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     tools {
-        maven 'sonarmaven'
+        maven 'sonar-maven'
     }
 
     environment {
-        MAVEN_PATH = 'C:\\Users\\surya\\Downloads\\apache-maven-3.9.9-bin\\apache-maven-3.9.9\\bin'
+         MAVEN_HOME="C:\\Users\\sheik\\Downloads\\apache-maven-3.9.9-bin\\apache-maven-3.9.9\\bin" 
         SONAR_TOKEN = credentials('sonarqube-token')
     }
 
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 echo 'Cleaning target directory...'
                 bat '''
-                set PATH=%MAVEN_PATH%;%PATH%
+                set PATH=%MAVEN_HOME%;%PATH%
                 mvn clean
                 '''
             }
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 echo 'Testing the project...'
                 bat '''
-                set PATH=%MAVEN_PATH%;%PATH%
+                set PATH=%MAVEN_HOME%;%PATH%
                 mvn test
                 '''
             }
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 echo 'Packaging the compiled code...'
                 bat '''
-                set PATH=%MAVEN_PATH%;%PATH%
+                set PATH=%MAVEN_HOME%;%PATH%
                 mvn package
                 '''
             }
@@ -51,16 +51,15 @@ pipeline {
             steps {
                 echo 'Running SonarQube analysis...'
                 bat '''
-                set PATH=%MAVEN_PATH%;%PATH%
+                set PATH=%MAVEN_HOME%;%PATH%
                 mvn sonar:sonar ^
-                  -Dsonar.projectKey=SQ-Assessment2 ^
-                  -Dsonar.sources=src/main/java ^
-                  -Dsonar.tests=src/test/java ^
-                  -Dsonar.java.binaries=target/classes ^
-                  -Dsonar.host.url=http://localhost:9000 ^
-                  -Dsonar.token=%SONAR_TOKEN% ^
-                  -Dsonar.duplications.hashtable=200000 ^
-                  -Dsonar.duplications=always
+                -Dsonar.projectKey=Task2GPT ^
+                -Dsonar.sources=src/main/java ^
+                -Dsonar.tests=src/test/java ^
+                -Dsonar.java.binaries=target/classes ^
+                -Dsonar.projectName='Task2(GPT)' ^
+                -Dsonar.host.url=http://localhost:9000 ^
+                -Dsonar.token=sqp_802153cb2f5647f8e3c0c98c72dbaf3d8442c517
                 '''
             }
         }
